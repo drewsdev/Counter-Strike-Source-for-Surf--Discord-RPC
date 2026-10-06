@@ -1,1 +1,1 @@
-# Counter-Strike-Source-for-Surf--Discord-RPC
+# Counter-Strike-Source-for-Surf-Discord-RPC
