@@ -1,6 +1,7 @@
 export interface SteamPlayer {
   steamid: string;
   personaname: string;
+  communityvisibilitystate?: number;
   profileurl?: string;
   avatarfull?: string;
   personastate?: number;

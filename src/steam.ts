@@ -52,3 +52,14 @@ export async function getPlayerSummary(apiKey: string, steamId: string): Promise
   if (!player) throw new Error('Steam Web API returned no player summary.');
   return player;
 }
+
+export function assertPublicSteamPrivacy(player: SteamPlayer): void {
+  if (player.communityvisibilitystate !== 3) {
+    throw new Error('Your Steam profile must be public. Set Profile privacy to Public, then log in again.');
+  }
+
+  const gameDetailsVisible = Boolean(player.gameid || player.gameextrainfo || player.gameserverip);
+  if (!gameDetailsVisible) {
+    throw new Error('Your Steam game details must be public. Set Game details to Public, then log in again while Counter-Strike: Source is running.');
+  }
+}

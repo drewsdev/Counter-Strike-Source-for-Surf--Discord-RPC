@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { createSteamLoginUrl, getPlayerSummary, verifySteamLogin } from './steam.js';
+import { assertPublicSteamPrivacy, createSteamLoginUrl, getPlayerSummary, verifySteamLogin } from './steam.js';
 import { queryA2SInfo } from './a2s.js';
 import { clearPresence, connectDiscord, updatePresence } from './discord.js';
 
@@ -23,6 +23,8 @@ app.get('/auth/steam/callback', async (request, response) => {
     const sessionKey = request.ip ?? 'unknown-client';
     const query = Object.fromEntries(Object.entries(request.query).map(([key, value]) => [key, typeof value === 'string' ? value : undefined]));
     const steamId = await verifySteamLogin(query);
+    const player = await getPlayerSummary(steamApiKey as string, steamId);
+    assertPublicSteamPrivacy(player);
     sessions.set(sessionKey, { steamId });
     response.send('Steam login succeeded. The local Discord RPC is now tracking your game. You can close this tab.');
     void refreshPresence(sessionKey);
