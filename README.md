@@ -9,7 +9,7 @@ A small local Node.js service that connects a Steam account to Discord Rich Pres
 3. `GetPlayerSummaries` verifies that the profile is public, while `GetOwnedGames` verifies that game details are public.
 4. `GetPlayerSummaries` checks whether the account is playing Counter-Strike: Source and returns `gameserverip`.
 5. The service sends a UDP `A2S_INFO` request to that address.
-6. The server name, current map, server IP, player count, and a locally tracked session start time are published to Discord, along with a Steam profile button.
+6. The server name, current map, server IP, session playtime, and the `KSF servers` button are published to Discord.
 
 ## Requirements
 
@@ -47,6 +47,6 @@ The service keeps sessions in memory, keyed by client IP. Restarting it logs eve
 - `gameserverip` is only present while Steam reports the player as currently in a game.
 - Steam does not provide a standalone game-details privacy flag. The login check uses the presence of the `GetOwnedGames` list as the API-level signal that game details are exposed.
 - Counter-Strike: Source is identified by Steam app ID `240`.
-- The Discord button opens the player's Steam profile and uses `DISCORD_BUTTON_LABEL` for its label.
+- The Discord `KSF servers` button opens <https://ksf.surf/connect>.
 - Discord image keys must match assets uploaded in the Discord Developer Portal; missing assets are ignored by Discord.
 - The current implementation targets IPv4 Source servers and the standard A2S_INFO response.
