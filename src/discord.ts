@@ -14,12 +14,19 @@ export async function connectDiscord(clientId: string): Promise<void> {
 export async function updatePresence(player: SteamPlayer, server: A2SInfo, startedAt: number): Promise<void> {
   if (!client || !ready) return;
   await client.setActivity({
-    details: server.name || 'Counter-Strike: Source',
-    state: `${server.map} | ${server.players}/${server.maxPlayers} players`,
+    details: `Current map: ${server.map}`,
+    state: `Server IP: ${player.gameserverip} | ${server.players}/${server.maxPlayers} players`,
     startTimestamp: startedAt,
     largeImageKey: 'css',
-    largeImageText: 'Counter-Strike: Source',
+    largeImageText: server.name || 'Counter-Strike: Source',
+    smallImageKey: process.env.DISCORD_SMALL_IMAGE_KEY ?? 'css_small',
     smallImageText: player.personaname,
+    buttons: player.profileurl
+      ? [{
+          label: process.env.DISCORD_BUTTON_LABEL ?? 'View Steam Profile',
+          url: player.profileurl
+        }]
+      : undefined,
     instance: false
   });
 }

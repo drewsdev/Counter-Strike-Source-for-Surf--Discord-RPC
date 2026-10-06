@@ -5,7 +5,9 @@ declare module 'discord-rpc' {
     startTimestamp?: number;
     largeImageKey?: string;
     largeImageText?: string;
+    smallImageKey?: string;
     smallImageText?: string;
+    buttons?: Array<{ label: string; url: string }>;
     instance?: boolean;
   }
 
