@@ -6,9 +6,10 @@ A small local Node.js service that connects a Steam account to Discord Rich Pres
 
 1. The browser signs in through Steam OpenID.
 2. The callback verifies the OpenID assertion server-to-server and extracts the SteamID64.
-3. `GetPlayerSummaries` verifies that the profile is public and that Steam exposes game details, then checks whether the account is playing Counter-Strike: Source and returns `gameserverip`.
-4. The service sends a UDP `A2S_INFO` request to that address.
-5. The server name, map, player count, and a locally tracked session start time are published to Discord.
+3. `GetPlayerSummaries` verifies that the profile is public, while `GetOwnedGames` verifies that game details are public.
+4. `GetPlayerSummaries` checks whether the account is playing Counter-Strike: Source and returns `gameserverip`.
+5. The service sends a UDP `A2S_INFO` request to that address.
+6. The server name, map, player count, and a locally tracked session start time are published to Discord.
 
 ## Requirements
 
@@ -44,6 +45,6 @@ The service keeps sessions in memory, keyed by client IP. Restarting it logs eve
 ## Notes
 
 - `gameserverip` is only present while Steam reports the player as currently in a game.
-- Steam does not provide a standalone game-details privacy flag. The login check treats the presence of Steam game fields as proof that game details are exposed, so log in while Counter-Strike: Source is running.
+- Steam does not provide a standalone game-details privacy flag. The login check uses the presence of the `GetOwnedGames` list as the API-level signal that game details are exposed.
 - Counter-Strike: Source is identified by Steam app ID `240`.
 - The current implementation targets IPv4 Source servers and the standard A2S_INFO response.

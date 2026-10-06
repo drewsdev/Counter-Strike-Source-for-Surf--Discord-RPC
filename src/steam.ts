@@ -53,13 +53,23 @@ export async function getPlayerSummary(apiKey: string, steamId: string): Promise
   return player;
 }
 
-export function assertPublicSteamPrivacy(player: SteamPlayer): void {
+export async function hasPublicGameDetails(apiKey: string, steamId: string): Promise<boolean> {
+  const url = new URL('https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/');
+  url.searchParams.set('key', apiKey);
+  url.searchParams.set('steamid', steamId);
+  url.searchParams.set('include_played_free_games', '1');
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Steam Web API returned HTTP ${response.status}.`);
+  const data = await response.json() as { response?: { games?: unknown[] } };
+  return Array.isArray(data.response?.games);
+}
+
+export function assertPublicSteamPrivacy(player: SteamPlayer, gameDetailsPublic: boolean): void {
   if (player.communityvisibilitystate !== 3) {
     throw new Error('Your Steam profile must be public. Set Profile privacy to Public, then log in again.');
   }
 
-  const gameDetailsVisible = Boolean(player.gameid || player.gameextrainfo || player.gameserverip);
-  if (!gameDetailsVisible) {
-    throw new Error('Your Steam game details must be public. Set Game details to Public, then log in again while Counter-Strike: Source is running.');
+  if (!gameDetailsPublic) {
+    throw new Error('Your Steam game details must be public. Set Game details to Public, then log in again.');
   }
 }
